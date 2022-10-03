@@ -23,4 +23,10 @@ public class AdController {
         return adRepository.save(ad);
     }
 
+    @GetMapping
+    public List<Ad> getByPrice(@RequestParam(required = false, defaultValue = "0") int min,
+                               @RequestParam(required = false, defaultValue = "10000000") int max){
+        return adRepository.findAdBetweenValues(min, max);
+    }
+
 }
