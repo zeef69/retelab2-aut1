@@ -1,10 +1,9 @@
 package hu.bme.aut.retelab2.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -18,6 +17,9 @@ public class Ad {
     private int price;
     private Instant creationTime;
     private String updateToken;
+
+    @ElementCollection
+    private List<String> tagList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -52,4 +54,7 @@ public class Ad {
 
     public String getUpdateToken(){ return updateToken; }
     public void setUpdateToken(String token){ this.updateToken = token;}
+
+    public List<String> getTagList() {return tagList; }
+    public void setTagList(List<String> tagList) { this.tagList = tagList;}
 }

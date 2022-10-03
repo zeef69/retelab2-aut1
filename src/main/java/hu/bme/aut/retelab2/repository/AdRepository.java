@@ -34,8 +34,17 @@ public class AdRepository {
     public Ad update(Ad newAd) throws ForbiddenException{
         Ad updatedAd = em.find(Ad.class, newAd.getId());
         if(updatedAd.getUpdateToken().equals(newAd.getUpdateToken())){
+            newAd.setUpdateToken(SecretGenerator.generate());
+            newAd.setCreationTime(updatedAd.getCreationTime());
             return save(newAd);
         }
         throw new ForbiddenException();
+    }
+
+    public List<Ad> findByTag(String tag){
+        return em.createQuery(   "SELECT a FROM Ad a " +
+                        "WHERE ?1 MEMBER a.tagList", Ad.class)
+                .setParameter(1,tag)
+                .getResultList();
     }
 }

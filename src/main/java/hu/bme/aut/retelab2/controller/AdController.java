@@ -37,6 +37,12 @@ public class AdController {
     public Ad update(@RequestBody Ad updated) throws ForbiddenException {
         return adRepository.update(updated);
     }
+    @GetMapping("/{tag}")
+    public List<Ad> getByTag(@PathVariable String tag){
+        List<Ad> adList =  adRepository.findByTag(tag);
+        adList.forEach(ad -> ad.setUpdateToken("null"));
+        return adRepository.findByTag(tag);
+    }
 
 
 }
