@@ -22,7 +22,6 @@ public class AdController {
     public Ad create(@RequestBody Ad ad){
         ad.setId(null);
         ad.setCreationTime(Instant.now());
-        ad.setUpdateToken(SecretGenerator.generate());
         return adRepository.save(ad);
     }
 

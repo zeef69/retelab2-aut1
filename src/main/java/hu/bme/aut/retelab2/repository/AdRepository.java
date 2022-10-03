@@ -18,6 +18,7 @@ public class AdRepository {
 
     @Transactional
     public Ad save(Ad ad) {
+        ad.setUpdateToken(SecretGenerator.generate());
         return em.merge(ad);
     }
 
@@ -29,16 +30,12 @@ public class AdRepository {
                 .getResultList();
     }
 
+    @Transactional
     public Ad update(Ad newAd) throws ForbiddenException{
         Ad updatedAd = em.find(Ad.class, newAd.getId());
         if(updatedAd.getUpdateToken().equals(newAd.getUpdateToken())){
-            updatedAd.setTitle(newAd.getTitle());
-            updatedAd.setDescription(newAd.getDescription());
-            updatedAd.setPrice(newAd.getPrice());
-            updatedAd.setUpdateToken(SecretGenerator.generate());
-            return updatedAd;
+            return save(newAd);
         }
-        else
-            throw new ForbiddenException();
+        throw new ForbiddenException();
     }
 }
