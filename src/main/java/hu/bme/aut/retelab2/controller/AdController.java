@@ -6,9 +6,12 @@ import hu.bme.aut.retelab2.domain.Ad;
 import hu.bme.aut.retelab2.repository.AdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -44,5 +47,12 @@ public class AdController {
         return adRepository.findByTag(tag);
     }
 
+    @Transactional
+    @Scheduled(fixedDelay= 6000)
+    public void deleteExpiredAd() {
+        List<Ad> expiredList = adRepository.deleteExpiredAd();
+        expiredList.forEach(ad -> adRepository.deleteById(ad.getId()));
+
+    }
 
 }

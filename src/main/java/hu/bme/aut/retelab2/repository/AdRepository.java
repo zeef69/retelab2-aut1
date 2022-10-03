@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -46,5 +47,23 @@ public class AdRepository {
                         "WHERE ?1 MEMBER a.tagList", Ad.class)
                 .setParameter(1,tag)
                 .getResultList();
+    }
+    @Transactional
+    public List<Ad> deleteExpiredAd() {
+        LocalDateTime this_Time=LocalDateTime.now();
+        return em.createQuery(   "SELECT a FROM Ad a " +
+                "WHERE a.expirationTime < ?1", Ad.class)
+                .setParameter(1, this_Time)
+                .getResultList();
+    }
+    public Ad findById(long id) {
+        return em.find(Ad.class, id);
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        Ad ad = findById(id);
+        ad.getTagList().clear();
+        em.remove(ad);
     }
 }

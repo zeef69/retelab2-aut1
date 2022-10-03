@@ -1,7 +1,10 @@
 package hu.bme.aut.retelab2.domain;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +20,10 @@ public class Ad {
     private int price;
     private Instant creationTime;
     private String updateToken;
-
     @ElementCollection
     private List<String> tagList = new ArrayList<>();
+    @Nullable
+    private LocalDateTime expirationTime;
 
     public Long getId() {
         return id;
@@ -57,4 +61,8 @@ public class Ad {
 
     public List<String> getTagList() {return tagList; }
     public void setTagList(List<String> tagList) { this.tagList = tagList;}
+
+    @Nullable
+    public LocalDateTime getExpirationTime() { return expirationTime; }
+    public void setExpirationTime(@Nullable LocalDateTime expirationTime) {this.expirationTime = expirationTime;}
 }
