@@ -1,5 +1,7 @@
 package hu.bme.aut.retelab2.controller;
 
+import hu.bme.aut.retelab2.ForbiddenException;
+import hu.bme.aut.retelab2.SecretGenerator;
 import hu.bme.aut.retelab2.domain.Ad;
 import hu.bme.aut.retelab2.repository.AdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,22 @@ public class AdController {
     public Ad create(@RequestBody Ad ad){
         ad.setId(null);
         ad.setCreationTime(Instant.now());
+        ad.setUpdateToken(SecretGenerator.generate());
         return adRepository.save(ad);
     }
 
     @GetMapping
     public List<Ad> getByPrice(@RequestParam(required = false, defaultValue = "0") int min,
                                @RequestParam(required = false, defaultValue = "10000000") int max){
-        return adRepository.findAdBetweenValues(min, max);
+        List<Ad> adList =  adRepository.findAdBetweenValues(min, max);
+        adList.forEach(ad -> ad.setUpdateToken("null"));
+        return adList;
     }
+
+    @PutMapping
+    public Ad update(@RequestBody Ad updated) throws ForbiddenException {
+        return adRepository.update(updated);
+    }
+
 
 }

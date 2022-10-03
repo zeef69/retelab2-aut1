@@ -1,5 +1,7 @@
 package hu.bme.aut.retelab2.repository;
 
+import hu.bme.aut.retelab2.ForbiddenException;
+import hu.bme.aut.retelab2.SecretGenerator;
 import hu.bme.aut.retelab2.domain.Ad;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +22,23 @@ public class AdRepository {
     }
 
     public List<Ad> findAdBetweenValues(int min, int max){
-        return em.createQuery("SELECT a FROM Ad a WHERE a.price BETWEEN ?1 AND ?2", Ad.class)
+        return em.createQuery(   "SELECT a FROM Ad a " +
+                                    "WHERE a.price BETWEEN ?1 AND ?2", Ad.class)
                 .setParameter(1,min)
                 .setParameter(2,max)
                 .getResultList();
+    }
+
+    public Ad update(Ad newAd) throws ForbiddenException{
+        Ad updatedAd = em.find(Ad.class, newAd.getId());
+        if(updatedAd.getUpdateToken().equals(newAd.getUpdateToken())){
+            updatedAd.setTitle(newAd.getTitle());
+            updatedAd.setDescription(newAd.getDescription());
+            updatedAd.setPrice(newAd.getPrice());
+            updatedAd.setUpdateToken(SecretGenerator.generate());
+            return updatedAd;
+        }
+        else
+            throw new ForbiddenException();
     }
 }

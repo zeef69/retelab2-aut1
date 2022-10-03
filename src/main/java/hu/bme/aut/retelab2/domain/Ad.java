@@ -17,6 +17,7 @@ public class Ad {
     private String description;
     private int price;
     private Instant creationTime;
+    private String updateToken;
 
     public Long getId() {
         return id;
@@ -48,4 +49,7 @@ public class Ad {
 
     public Instant getCreationTime(){ return  creationTime; }
     public void setCreationTime(Instant time){ this.creationTime = time; }
+
+    public String getUpdateToken(){ return updateToken; }
+    public void setUpdateToken(String token){ this.updateToken = token;}
 }
